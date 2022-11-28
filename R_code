@@ -1,0 +1,24 @@
+library('pheatmap')
+read.table('COGS-table-new.txt',header = TRUE, row.names = 1, sep = '\t') -> counts_cog
+counts_cog
+counts_cog[,-c(1)]->df_counts_cogs
+df_counts_cogs
+data.frame(Organism_type=counts_cog$Organism.type)->annot_rows
+annot_rows
+rownames(annot_rows)<-rownames(counts_cog)
+annot_rows
+makeColorRampPalette <- function(colors, cutoff.fraction, num.colors.in.palette)
+{
+  stopifnot(length(colors) == 4)
+  ramp1 <- colorRampPalette(colors[1:2])(num.colors.in.palette * cutoff.fraction)
+  ramp2 <- colorRampPalette(colors[3:4])(num.colors.in.palette * (1 - cutoff.fraction))
+  return(c(ramp1, ramp2))
+}
+
+cutoff.distance <- 100
+cols<-makeColorRampPalette(c("#80FF00","#004C99",
+                             "#CC0066","#4C0099"),
+                           cutoff.distance/max(300),800)
+pheatmap(df_counts_cogs,color = cols,cutree_rows = 3,cutree_cols = 3, annotation_row = annot_rows, angle_col = 45)
+pheatmap(df_counts_cogs,color = cols,cutree_rows = 3,cutree_cols = 3, annotation_row = annot_rows, angle_col = 45,border_color = "black")
+pheatmap(df_counts_cogs,color = cols,cutree_rows = 3,cutree_cols = 3, annotation_row = annot_rows, angle_col = 45,border_color = NA)
